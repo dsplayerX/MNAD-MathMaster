@@ -143,7 +143,7 @@ struct GuessView: View {
             isCorrect = true
             answeredCorrectly = true // Mark that the answer was correct
         } else {
-            feedback = "Incorrect answer! The actual answer is \(correctAnswer)"
+            feedback = "Incorrect answer! The actual answer is \(correctAnswer)."
             points = max(points - 1, 0) // To avoid negative points
             isCorrect = false
             answeredCorrectly = false
