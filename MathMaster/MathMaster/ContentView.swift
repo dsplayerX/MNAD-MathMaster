@@ -1,8 +1,3 @@
-// ContentView.swift
-// MathMaster
-//
-// Created by Dumindu Sameendra on 2024-10-09.
-
 import SwiftUI
 
 struct ContentView: View {
@@ -14,6 +9,8 @@ struct ContentView: View {
     @State private var fontSize: CGFloat = 24 // Default font size
     @State private var systemColor = Color.primary // Default color scheme
     @State private var feedback = ""
+    @State private var isCorrect: Bool? = nil // To track if the answer was correct
+    
     let operators = ["+", "-", "*", "/"]
 
     var body: some View {
@@ -21,36 +18,75 @@ struct ContentView: View {
             // Guess tab
             NavigationStack() {
                 VStack(spacing: 20) {
+                    // Title
+                    Text("Guess the answer!")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(Color.blue)
+                        .padding(.top, 20)
+
+                    // Question display
                     Text(question)
-                        .font(.system(size: fontSize))
+                        .font(.system(size: 24, weight: .bold))
                         .foregroundColor(systemColor)
                         .padding()
-                        .onAppear(perform: generateQuestion)
-                    
-                    TextField("Enter your answer", text: $userAnswer)
-                        .keyboardType(.numberPad)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
-                    
-                    Button(action: checkAnswer) {
-                        Text("Submit")
-                            .font(.system(size: fontSize))
+
+                    // Answer input
+                    HStack {
+                        TextField("Answer", text: $userAnswer)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .frame(width: 200)
                             .padding()
-                            .background(systemColor)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+
+                        Button(action: checkAnswer) {
+                            Text("Submit")
+                                .frame(width: 80, height: 40)
+                                .background(systemColor.opacity(0.2))
+                                .foregroundColor(.blue)
+                                .cornerRadius(8)
+                        }
+                        .disabled(userAnswer.isEmpty)
                     }
-                    
-                    Text(feedback)
+
+                    // Feedback message
+                    if let isCorrect = isCorrect {
+                        HStack {
+                            Image(systemName: isCorrect ? "checkmark.circle" : "xmark.circle")
+                                .foregroundColor(isCorrect ? .green : .red)
+                            Text(feedback)
+                                .foregroundColor(isCorrect ? .green : .red)
+                                .font(.system(size: 18, weight: .semibold))
+                        }
+                    }
+
+                    // Points display
+                    Text("\(points)")
+                        .font(.system(size: 64, weight: .bold))
                         .foregroundColor(systemColor)
-                        .font(.system(size: fontSize))
-                        .padding()
-                    
-                    Text("Points: \(points)")
-                        .font(.system(size: fontSize))
-                        .foregroundColor(systemColor)
+
+                    // Instructions text
+                    Text("Submit the correct answer and gain 1 point. Submit a wrong answer or press on \"NEXT\" and you will lose 1 point")
+                        .font(.system(size: 14))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
+
+                    // Next Button
+                    Button(action: {
+                        userAnswer = ""
+                        feedback = ""
+                        isCorrect = nil
+                        generateQuestion()
+                    }) {
+                        Text("NEXT")
+                            .frame(width: 120, height: 40)
+                            .background(Color.green.opacity(0.2))
+                            .foregroundColor(.green)
+                            .cornerRadius(8)
+                    }
+                    .padding(.bottom, 20)
                 }
                 .navigationTitle("Guess the answer!")
+                .onAppear(perform: generateQuestion)
             }
             .tabItem {
                 Text("Guess")
@@ -109,16 +145,16 @@ struct ContentView: View {
         if let userAnswerInt = Int(userAnswer), userAnswerInt == correctAnswer {
             feedback = "Correct! Well done!"
             points += 1
+            isCorrect = true
         } else {
-            feedback = "Incorrect. The correct answer was \(correctAnswer)."
+            feedback = "Incorrect answer! The actual answer is \(correctAnswer)"
             points = max(points - 1, 0) // Avoid negative points
+            isCorrect = false
         }
-        
-        userAnswer = "" // Clear input
-        generateQuestion() // Generate a new question
     }
 }
 
 #Preview {
     ContentView()
 }
+
