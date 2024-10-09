@@ -1,10 +1,3 @@
-//
-//  GuessView.swift
-//  MathMaster
-//
-//  Created by Dumindu Sameendra on 2024-10-09.
-//
-
 import SwiftUI
 
 struct GuessView: View {
@@ -69,13 +62,16 @@ struct GuessView: View {
                     .foregroundColor(systemColor)
 
                 // Instructions text
-                Text("Submit the correct answer and gain 1 point. Submit a wrong answer or press on \"NEXT\" and you will lose 1 point")
+                Text("Submit the correct answer and gain 1 point. Submit a wrong answer or press on \"NEXT\" without an answer to lose 1 point.")
                     .font(.system(size: 14))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 20)
 
                 // Next Button
                 Button(action: {
+                    if userAnswer.isEmpty {
+                        points = max(points - 1, 0) // Decrease points if no answer
+                    }
                     userAnswer = ""
                     feedback = ""
                     isCorrect = nil
