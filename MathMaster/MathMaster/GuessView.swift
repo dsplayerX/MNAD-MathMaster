@@ -12,8 +12,30 @@ struct GuessView: View {
     @State private var feedback = ""
     @State private var isCorrect: Bool? = nil
     @State private var buttonDisabled: Bool = false
-    
-    let operators = ["+", "-", "x", "/"]
+    @State private var answeredCorrectly: Bool = false // New state to track if the answer was correct
+
+
+    // Enum for mathematical operators
+    enum Operator: String, CaseIterable {
+        case addition = "+"
+        case subtraction = "-"
+        case multiplication = "x"
+        case division = "/"
+        
+        // Perform the operation
+        func perform(_ num1: Int, _ num2: Int) -> Int {
+            switch self {
+            case .addition:
+                return num1 + num2
+            case .subtraction:
+                return num1 - num2
+            case .multiplication:
+                return num1 * num2
+            case .division:
+                return num1 / (num2 == 0 ? 1 : num2) // Handle division by zero
+            }
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -38,14 +60,18 @@ struct GuessView: View {
                         .frame(width: 200)
                         .padding()
 
-                    Button(action: checkAnswer) {
+                    Button(action:{
+                        checkAnswer()
+                        userAnswer = ""
+                        buttonDisabled = true
+                    }) {
                         Text("Submit")
                             .frame(width: 80, height: 40)
-                            .background(systemColor.opacity(0.2))
-                            .foregroundColor(.blue)
+                            .background(userAnswer.isEmpty || buttonDisabled ? Color.gray.opacity(0.2) : systemColor.opacity(0.2))
+                            .foregroundColor(userAnswer.isEmpty || buttonDisabled ? Color.gray : systemColor)
                             .cornerRadius(8)
                     }
-                    .disabled(userAnswer.isEmpty)
+                    .disabled(userAnswer.isEmpty || buttonDisabled)
                 }
 
                 // Feedback message
@@ -75,12 +101,14 @@ struct GuessView: View {
 
                 // Next Button
                 Button(action: {
-                    if userAnswer.isEmpty {
-                        points = max(points - 1, 0) // Decrease points if no answer
+                    if userAnswer.isEmpty && !answeredCorrectly {
+                        points = max(points - 1, 0) // Decrease points only if no answer and previous answer was wrong
                     }
+                    answeredCorrectly = false // Reset for the next round
                     userAnswer = ""
                     feedback = ""
                     isCorrect = nil
+                    buttonDisabled = false // Re-enable the button for the next question
                     generateQuestion()
                 }) {
                     Text("NEXT")
@@ -99,22 +127,12 @@ struct GuessView: View {
     func generateQuestion() {
         let num1 = Int.random(in: 1...10)
         let num2 = Int.random(in: 1...10)
-        let op = operators.randomElement()!
+        let op = Operator.allCases.randomElement()!
 
-        switch op {
-        case "+":
-            correctAnswer = num1 + num2
-        case "-":
-            correctAnswer = num1 - num2
-        case "x":
-            correctAnswer = num1 * num2
-        case "/":
-            correctAnswer = num1 / num2
-        default:
-            break
-        }
+        // Generate the correct answer using the selected operator
+        correctAnswer = op.perform(num1, num2)
 
-        question = "\(num1) \(op) \(num2) = ?"
+        question = "\(num1) \(op.rawValue) \(num2) = ?"
     }
 
     // Function to check if the user's answer is correct
@@ -123,14 +141,16 @@ struct GuessView: View {
             feedback = "Correct! Well done!"
             points += 1
             isCorrect = true
+            answeredCorrectly = true // Mark that the answer was correct
         } else {
             feedback = "Incorrect answer! The actual answer is \(correctAnswer)"
             points = max(points - 1, 0) // To avoid negative points
             isCorrect = false
+            answeredCorrectly = false
         }
     }
 }
 
 #Preview {
-    GuessView(fontSize: .constant(24), systemColor: .constant(Color.primary))
+    GuessView(fontSize: .constant(16), systemColor: .constant(.blue))
 }

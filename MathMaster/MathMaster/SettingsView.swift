@@ -16,7 +16,7 @@ struct SettingsView: View {
                 VStack(spacing: 20) {
                     Text("Font Size: \(Int(selectedFontSize))")
                         .font(.headline)
-                    Slider(value: $selectedFontSize, in: 16...40, step: 1)
+                    Slider(value: $selectedFontSize, in: 8...32, step: 1)
                         .padding()
 
                     Text("Select Color")
