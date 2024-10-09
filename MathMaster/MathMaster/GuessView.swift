@@ -9,8 +9,9 @@ struct GuessView: View {
     @State private var systemColor = Color.primary
     @State private var feedback = ""
     @State private var isCorrect: Bool? = nil
-
-    let operators = ["+", "-"]
+    @State private var buttonDisabled: Bool = false
+    
+    let operators = ["+", "-", "x", "/"]
 
     var body: some View {
         NavigationStack {
@@ -100,6 +101,10 @@ struct GuessView: View {
             correctAnswer = num1 + num2
         case "-":
             correctAnswer = num1 - num2
+        case "x":
+            correctAnswer = num1 * num2
+        case "/":
+            correctAnswer = num1 / num2
         default:
             break
         }
