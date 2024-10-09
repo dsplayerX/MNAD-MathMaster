@@ -20,7 +20,7 @@ struct GuessView: View {
             VStack(spacing: 20) {
                 // Title
                 Text("Guess the answer!")
-                    .font(.system(size: 28, weight: .bold))
+                    .font(.system(size: 32, weight: .bold))
                     .foregroundColor(systemColor)
                     .padding(.top, 20)
 

@@ -15,13 +15,13 @@ struct HomeView: View {
             TabView {
                 GuessView(fontSize: $fontSize, systemColor: $systemColor)
                     .tabItem {
-                        Label("Guess", systemImage: "house.fill").foregroundColor(systemColor)
+                        Label("Guess", systemImage: "checkmark.seal.fill").foregroundColor(systemColor)
                     }
                     .tag(0)
 
                 SettingsView(selectedFontSize: $fontSize, selectedColor: $systemColor)
                     .tabItem {
-                        Label("Settings", systemImage: "gear").foregroundColor(systemColor)
+                        Label("Settings", systemImage: "gearshape").foregroundColor(systemColor)
                     }
                     .tag(1)
             }.accentColor(systemColor)
