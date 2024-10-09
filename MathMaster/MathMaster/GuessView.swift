@@ -91,7 +91,7 @@ struct GuessView: View {
                 }
                 .padding(.bottom, 20)
             }
-            .onAppear(perform: generateQuestion)
+            .onAppear(perform: generateQuestion).navigationTitle("Math Master")
         }
     }
 

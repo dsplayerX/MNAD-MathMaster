@@ -25,7 +25,7 @@ struct SettingsView: View {
                     ColorPicker("System Color", selection: $selectedColor)
                         .padding()
                 }
-                .navigationTitle("Settings")
+                .navigationTitle(Text("Settings").foregroundColor(selectedColor))
             }
         }
 }
