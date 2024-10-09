@@ -1,12 +1,14 @@
 import SwiftUI
 
 struct GuessView: View {
+    @Binding var fontSize: CGFloat
+    @Binding var systemColor: Color
+
     @State private var selectedIndex: Int = 0
     @State private var userAnswer = ""
     @State private var question = ""
     @State private var correctAnswer = 0
     @State private var points = 0
-    @State private var systemColor = Color.primary
     @State private var feedback = ""
     @State private var isCorrect: Bool? = nil
     @State private var buttonDisabled: Bool = false
@@ -19,13 +21,13 @@ struct GuessView: View {
                 // Title
                 Text("Guess the answer!")
                     .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(Color.blue)
+                    .foregroundColor(systemColor)
                     .padding(.top, 20)
 
                 // Question display
                 Text(question)
                     .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(systemColor)
+                    .foregroundColor(Color.black)
                     .padding()
 
                 // Answer input
@@ -60,11 +62,14 @@ struct GuessView: View {
                 // Points display
                 Text("\(points)")
                     .font(.system(size: 64, weight: .bold))
-                    .foregroundColor(systemColor)
+                    .foregroundColor(Color.black)
 
                 // Instructions text
+                Text("Instructions").font(.system(size: fontSize))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 20)
                 Text("Submit the correct answer and gain 1 point. Submit a wrong answer or press on \"NEXT\" without an answer to lose 1 point.")
-                    .font(.system(size: 14))
+                    .font(.system(size: fontSize))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 20)
 
@@ -92,8 +97,8 @@ struct GuessView: View {
 
     // Function to generate a new math question
     func generateQuestion() {
-        let num1 = Int.random(in: 1...100)
-        let num2 = Int.random(in: 1...100)
+        let num1 = Int.random(in: 1...10)
+        let num2 = Int.random(in: 1...10)
         let op = operators.randomElement()!
 
         switch op {
@@ -120,12 +125,12 @@ struct GuessView: View {
             isCorrect = true
         } else {
             feedback = "Incorrect answer! The actual answer is \(correctAnswer)"
-            points = max(points - 1, 0) // Avoid negative points
+            points = max(points - 1, 0) // To avoid negative points
             isCorrect = false
         }
     }
 }
 
 #Preview {
-    GuessView()
+    GuessView(fontSize: .constant(24), systemColor: .constant(Color.primary))
 }

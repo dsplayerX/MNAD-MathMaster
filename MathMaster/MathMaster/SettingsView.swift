@@ -8,28 +8,28 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var fontSize: CGFloat = 24
-    @State private var systemColor = Color.primary
+    @Binding var selectedFontSize: CGFloat
+        @Binding var selectedColor: Color
 
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                Text("Font Size: \(Int(fontSize))")
-                    .font(.headline)
-                Slider(value: $fontSize, in: 16...40, step: 1)
-                    .padding()
+        var body: some View {
+            NavigationStack {
+                VStack(spacing: 20) {
+                    Text("Font Size: \(Int(selectedFontSize))")
+                        .font(.headline)
+                    Slider(value: $selectedFontSize, in: 16...40, step: 1)
+                        .padding()
 
-                Text("Select Color")
-                    .font(.headline)
+                    Text("Select Color")
+                        .font(.headline)
 
-                ColorPicker("System Color", selection: $systemColor)
-                    .padding()
+                    ColorPicker("System Color", selection: $selectedColor)
+                        .padding()
+                }
+                .navigationTitle("Settings")
             }
-            .navigationTitle("Settings")
         }
-    }
 }
 
 #Preview {
-    SettingsView()
+    SettingsView(selectedFontSize: .constant(24), selectedColor: .constant(Color.primary))
 }

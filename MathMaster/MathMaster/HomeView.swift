@@ -8,22 +8,24 @@
 import SwiftUI
 
 struct HomeView: View {
-    var body: some View {
-        TabView {
-            GuessView()
-                .tabItem {
-                    Text("Guess")
-                    Image(systemName: "house.fill")
-                        .renderingMode(.template)
-                }
-                .tag(0)
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gearshape")
-                }
-                .tag(1)
+    @State private var fontSize: CGFloat = 18
+    @State private var systemColor: Color = Color.primary
+
+        var body: some View {
+            TabView {
+                GuessView(fontSize: $fontSize, systemColor: $systemColor)
+                    .tabItem {
+                        Label("Guess", systemImage: "house.fill")
+                    }
+                    .tag(0)
+
+                SettingsView(selectedFontSize: $fontSize, selectedColor: $systemColor)
+                    .tabItem {
+                        Label("Settings", systemImage: "gearshape")
+                    }
+                    .tag(1)
+            }
         }
-    }
 }
 
 #Preview {
