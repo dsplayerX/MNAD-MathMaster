@@ -2,7 +2,7 @@ import SwiftUI
 
 struct GuessView: View {
     @Binding var fontSize: CGFloat
-    @Binding var systemColor: Color
+    @Binding var systemColor:  AppTheme
 
     @State private var selectedIndex: Int = 0
     @State private var userAnswer = ""
@@ -12,7 +12,7 @@ struct GuessView: View {
     @State private var feedback = ""
     @State private var isCorrect: Bool? = nil
     @State private var buttonDisabled: Bool = false
-    @State private var answeredCorrectly: Bool = false // New state to track if the answer was correct
+    @State private var answeredCorrectly: Bool = false
 
 
     // Enum for mathematical operators
@@ -43,7 +43,7 @@ struct GuessView: View {
                 // Title
                 Text("Guess the answer!")
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(systemColor)
+                    .foregroundColor(systemColor.color)
                     .padding(.top, 20)
 
                 // Question display
@@ -67,8 +67,8 @@ struct GuessView: View {
                     }) {
                         Text("Submit")
                             .frame(width: 80, height: 40)
-                            .background(userAnswer.isEmpty || buttonDisabled ? Color.gray.opacity(0.2) : systemColor.opacity(0.2))
-                            .foregroundColor(userAnswer.isEmpty || buttonDisabled ? Color.gray : systemColor)
+                            .background(userAnswer.isEmpty || buttonDisabled ? Color.gray.opacity(0.2) : systemColor.color.opacity(0.2))
+                            .foregroundColor(userAnswer.isEmpty || buttonDisabled ? Color.gray : systemColor.color)
                             .cornerRadius(8)
                     }
                     .disabled(userAnswer.isEmpty || buttonDisabled)
